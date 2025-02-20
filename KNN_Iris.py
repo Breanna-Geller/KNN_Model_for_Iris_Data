@@ -8,6 +8,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+from collections import Counter # allows me to keep track of the most common element in a list - useful for KNN labels
 
 # Function to pick color based on class
 def ColorPick(y):
@@ -18,10 +19,35 @@ def ColorPick(y):
         return 'green'
     else:
         return 'blue'
-    
-# Function to calculate Euclidean Distance between two points in training and testing data
+
+###########
+### KNN ###
+########### 
+# Function to calculate Euclidean Distance between one point in test to training data
 def KNN(X_train, y_train, X_test, y_test, k):
-    return 0
+    # print(len(X_test)) # X_test passes in 8 points for each type of iris = 24
+    # print(len(X_train))# X_train passes in 32 points for each type of iris = 96
+    nearest_neighbors = []
+    predicted_labels = []
+    # Run through test data one at a time
+    for i in range(0, len(X_test)):
+        distances = []
+        for j in range(0, len(X_train)):
+            # Keep track of Euclidean Distances and labels from test to each training data point
+            distances.append([np.linalg.norm(X_test[i]-X_train[j]), y_train[j]])
+        distances.sort()
+        nearest_neighbors.append(distances[0:k]) # The sorted k-nearest neighbors (0-5) for this test point
+    # Traverse through all neighbors and find the most common label
+    for i in range(0, len(nearest_neighbors)):
+        # print(nearest_neighbors[i])
+        counter = Counter([x[1] for x in nearest_neighbors[i]]) # Need to access the label from list
+        #print(counter)
+        # Find the predicted label (most common)
+        counter.most_common()
+        predicted_labels.append(counter.most_common(1)[0][0])
+    # print(predicted_labels)
+    return predicted_labels
+
     
 #################################
 ### Fetching the Iris Dataset ###
@@ -84,7 +110,7 @@ X_train, Fold_4_X, y_train, Fold_4_Y = train_test_split(X_train, y_train, test_s
 # print(Fold_4_Y.value_counts()) # counting the number of each class in the valid -> GOOD!!! (8 each) (left = 8)
 Fold_5_X = X_train
 Fold_5_Y = y_train
-# print(Fold_5_Y.value_counts()) # counting the number of each class in the valid -> GOOD!!! (8 each)
+#print(type(Fold_5_Y)) # counting the number of each class in the valid -> GOOD!!! (8 each) - checked type too
 
 ##########################################
 ### KNN Train and Test Chamber (Loops) ###
@@ -94,7 +120,10 @@ Fold_5_Y = y_train
 Test_Set_Selection = [Fold_1_X, Fold_2_X, Fold_3_X, Fold_4_X, Fold_5_X]
 Test_Set_Labels = [Fold_1_Y, Fold_2_Y, Fold_3_Y, Fold_4_Y, Fold_5_Y]
 
+
+
 for i in range(0, 1):#len(Test_Set_Selection)):
+    predicted_labels = []
     # Selection of testing for fold == i
     X_test = Test_Set_Selection[i]
     y_test = Test_Set_Labels[i]
@@ -104,7 +133,14 @@ for i in range(0, 1):#len(Test_Set_Selection)):
     y_train = Test_Set_Labels.copy()
     y_train.pop(i)
     y_train = np.concatenate(y_train)
-    print(y_train.value_counts())
+    X_train = np.concatenate(X_train)
+    #print(y_train)
+    #print(X_train)
+    #print(y_test)
+    #print(Fold_1_Y)
+    #print(X_test)
+    #print(Fold_1_X)
 
-    # Call KNN function
-    KNN(X_train, y_train, X_test, y_test, 5)
+    # Call KNN function 
+    predicted_labels = KNN(X_train, y_train, X_test, y_test, 5)
+    print(predicted_labels)
