@@ -21,7 +21,7 @@ def ColorPick(y):
         return 'blue'
 
 ###########
-### KNN ###
+### KNN ###         # HOW TO DEAL WITH A TIE???? ask professor
 ########### 
 # Function to calculate Euclidean Distance between one point in test to training data
 def KNN(X_train, y_train, X_test, y_test, k):
@@ -90,7 +90,7 @@ y=y.iloc[:,0]
 ### Split the Iris Dataset into Train and Test ###
 ##################################################
 # By removing this testing set we can make sure we are not cheating
-X_train, X_test, y_train, y_test = train_test_split(X_pca, y, test_size=0.2, stratify=y)
+X_train, X_test_save, y_train, y_test_save = train_test_split(X_pca, y, test_size=0.2, stratify=y)
 # print(y_train)
 # print(y_test.value_counts()) # counting the number of each class in the test -> GOOD!!! (10 each)
 # print(y_train.value_counts()) # counting the number of each class in the train -> GOOD!!!(40 each)
@@ -122,7 +122,7 @@ Test_Set_Labels = [Fold_1_Y, Fold_2_Y, Fold_3_Y, Fold_4_Y, Fold_5_Y]
 
 
 
-for i in range(0, 1):#len(Test_Set_Selection)):
+for i in range(0, len(Test_Set_Selection)):
     predicted_labels = []
     # Selection of testing for fold == i
     X_test = Test_Set_Selection[i]
@@ -143,4 +143,25 @@ for i in range(0, 1):#len(Test_Set_Selection)):
 
     # Call KNN function 
     predicted_labels = KNN(X_train, y_train, X_test, y_test, 5)
-    print(predicted_labels)
+    # print(predicted_labels)
+
+    # Calculate Accuracy for this K-Fold Partition
+    accurate_predictions = 0
+    for j in range(0, len(predicted_labels)):
+        if predicted_labels[j] == y_test.iloc[j]:
+            #print(predicted_labels[i], y_test.iloc[i])
+            accurate_predictions += 1
+
+    print(f"Accuracy for K-Fold {i+1}: ", accurate_predictions/len(predicted_labels))
+    
+###############################################################
+### Completely New Never-Before Seen Set-Aside Data Testing ###
+###############################################################
+# Use the set aside OG test data to test the model
+predicted_labels_no_cheat = KNN(X_train, y_train, X_test_save, y_test_save, 5)
+no_cheat_acc = 0
+for i in range(0, len(predicted_labels_no_cheat)):
+    if predicted_labels_no_cheat[i] == y_test_save.iloc[i]:
+        no_cheat_acc += 1
+
+print(f"Accuracy for the Never-Before Seen Test Data: ", no_cheat_acc/len(predicted_labels_no_cheat))
