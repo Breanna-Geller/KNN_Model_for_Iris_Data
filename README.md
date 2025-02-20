@@ -24,3 +24,6 @@ There is no need to normalize the data, as the values range from ~6cm-10cm in al
 3   petal width  Feature   Continuous        None                                               None    cm             no
 4         class   Target  Categorical        None  class of iris plant: Iris Setosa, Iris Versico...  None             no
 ```
+
+### PCA to reduce dimensions
+In PCA, n_components is the "number of components to keep".[1](https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html) It takes the first n number of principal components. With many attributes it can be difficult to visualize data. Usually more than 90% of vairance can be explained by two/three principal components. [2](https://www.geeksforgeeks.org/implementing-pca-in-python-with-scikit-learn/)
