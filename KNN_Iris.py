@@ -10,18 +10,33 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from collections import Counter # allows me to keep track of the most common element in a list - useful for KNN labels
 
-# Function to pick color based on class
+###############################
+### Color Picking for Graph ###         
+###############################
 def ColorPick(y):
-    print(y)
+    #print(y)
     if y == 'Iris-setosa':
         return 'red'
     elif y == 'Iris-versicolor':
         return 'green'
     else:
         return 'blue'
+    
+###############################
+### Color Picking for Test  ###         
+###############################
+def ColorPickTest(y):
+    #print(y)
+    if y == 'Iris-setosa':
+        return 'pink'
+    elif y == 'Iris-versicolor':
+        return 'purple'
+    else:
+        return 'orange'
+
 
 ###########
-### KNN ###         # HOW TO DEAL WITH A TIE???? ask professor
+### KNN ###         
 ########### 
 # Function to calculate Euclidean Distance between one point in test to training data
 def KNN(X_train, y_train, X_test, y_test, k):
@@ -96,6 +111,11 @@ X_train, X_test_save, y_train, y_test_save = train_test_split(X_pca, y, test_siz
 # print(y_train.value_counts()) # counting the number of each class in the train -> GOOD!!!(40 each)
 
 
+# Plot to visualize the data onto old graph for comparison
+for i in range(0, len(y_train)):
+    plt.text(X_train[i,0], X_train[i,1], y_train.iloc[i], color='black')
+    plt.scatter(X_train[i,0], X_train[i,1], color=ColorPick(y_train.iloc[i]))
+
 ################################################
 ### 5-Fold Cross Validation of Training Data ###
 ################################################
@@ -121,7 +141,7 @@ Test_Set_Selection = [Fold_1_X, Fold_2_X, Fold_3_X, Fold_4_X, Fold_5_X]
 Test_Set_Labels = [Fold_1_Y, Fold_2_Y, Fold_3_Y, Fold_4_Y, Fold_5_Y]
 
 
-
+predicted_avg = 0
 for i in range(0, len(Test_Set_Selection)):
     predicted_labels = []
     # Selection of testing for fold == i
@@ -152,7 +172,11 @@ for i in range(0, len(Test_Set_Selection)):
             #print(predicted_labels[i], y_test.iloc[i])
             accurate_predictions += 1
 
-    print(f"Accuracy for K-Fold {i+1}: ", accurate_predictions/len(predicted_labels))
+    prediction = accurate_predictions/len(predicted_labels)
+    print(f"Accuracy for K-Fold {i+1}: ", prediction)
+    predicted_avg += prediction
+print (f"Average Accuracy: ", predicted_avg/5)
+
     
 ###############################################################
 ### Completely New Never-Before Seen Set-Aside Data Testing ###
@@ -165,3 +189,10 @@ for i in range(0, len(predicted_labels_no_cheat)):
         no_cheat_acc += 1
 
 print(f"Accuracy for the Never-Before Seen Test Data: ", no_cheat_acc/len(predicted_labels_no_cheat))
+
+
+# Plot to visualize the data onto old graph for comparison
+for i in range(0, len(y_test_save)):
+    plt.text(X_test_save[i,0], X_test_save[i,1], y_test_save.iloc[i], color='red')
+    plt.scatter(X_test_save[i,0], X_test_save[i,1], color=ColorPickTest(predicted_labels_no_cheat[i]))
+plt.show()
