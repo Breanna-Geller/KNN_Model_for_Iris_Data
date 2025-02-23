@@ -43,8 +43,8 @@ For this I will use train-test-split, with stratify set to the label and the tes
 
 ## Output EX:
 ![Output](Output_example_KNN.PNG)
-![Setosa](Iris_setosa.PNG)
-![V](Verginica_Versicolor.PNG)
+![Setosa](Iris_setosa.png)
+![V](Verginica_Versicolor.png)
 
 Output for code and graphing data is shown for the designations of flora. 
 
@@ -54,5 +54,5 @@ In the Setosa graph, pink dots with red text are test flowers from the set aside
 
 The colors of the testing Verginica are orange and Versicolor are purple. As you can see in the image below, a flower may have been incorrectly classified (a typically orange Verginica is purple- the classification of Versicolor). The testing accuracy for this case is shown below, where I had a 93% accuracy on flower classification.
 
-![Verginica_Incorrect](Verginica_Incorrect.PNG)
+![Verginica_Incorrect](Verginica_Incorrect.png)
 ![Verginica_Incorrect_Ouput](Incorrect_acc.PNG)
