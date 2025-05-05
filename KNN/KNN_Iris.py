@@ -9,6 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from collections import Counter # allows me to keep track of the most common element in a list - useful for KNN labels
+import time
 
 ###############################
 ### Color Picking for Graph ###         
@@ -62,7 +63,6 @@ def ColorPickTest(y):
     #     predicted_labels.append(counter.most_common(1)[0][0])
     # # print(predicted_labels)
     # return predicted_labels
-
 
 ##################
 ### KNN Matrix ###         
@@ -134,7 +134,7 @@ X_train, X_test_save, y_train, y_test_save = train_test_split(X_pca, y, test_siz
 # print(y_test.value_counts()) # counting the number of each class in the test -> GOOD!!! (10 each)
 # print(y_train.value_counts()) # counting the number of each class in the train -> GOOD!!!(40 each)
 
-
+start_time = time.time()
 # Plot to visualize the data onto old graph for comparison
 for i in range(0, len(y_train)):
     plt.text(X_train[i,0], X_train[i,1], y_train.iloc[i], color='black')
@@ -220,3 +220,5 @@ for i in range(0, len(y_test_save)):
     plt.text(X_test_save[i,0], X_test_save[i,1], y_test_save.iloc[i], color='red')
     plt.scatter(X_test_save[i,0], X_test_save[i,1], color=ColorPickTest(predicted_labels_no_cheat[i]))
 plt.show()
+end_time = time.time()
+print("Total time taken: ", end_time - start_time)

@@ -15,6 +15,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import LabelEncoder
 from optuna.visualization import plot_param_importances
 from sklearn.metrics import f1_score
+import time
 
 
 # Fetch the Iris dataset from UCI ML Repository
@@ -42,7 +43,8 @@ label_encoder = LabelEncoder()
 y_train = torch.tensor(label_encoder.fit_transform(y_train.values))
 y_test = torch.tensor(label_encoder.transform(y_test.values))
 
-
+start = time.time()
+print("Start time: ", start)
 # Feedforward NN 
 class Iris_NN_Model(nn.Module):
     def __init__(self,input_feature,hidden_layer,output,neurons_per_layer,activation_func,dropout_rate):
@@ -130,6 +132,12 @@ study.optimize(objective,n_trials=100) # 100 trials test
 
 # Create static Neural Network model with best hyperparameters -- F1 score
 # input_dim,num_hidden_layer,output_dim,neurons_per_layer,activation_func,dropout_rate)
+optuna.visualization.matplotlib.plot_param_importances(study)
+plt.show()
+end_time = time.time()
+print("End time: ", end_time)
+print("Total time taken: ", end_time - start)
+start=time.time()
 best_params = study.best_params
 best_model = Iris_NN_Model(
     input_feature=4,
@@ -166,6 +174,8 @@ with torch.no_grad():
 
 # Calculate the F1 score or other metrics
 score = f1_score(y_test, predictions, average='weighted')
+end_time = time.time()
+print("Total time taken for best model: ", end_time - start)
 accuracy_score = accuracy_score(y_test, predictions)
 print(f"Accuracy: {accuracy_score}")
 print(f"F1 Score: {score}")
